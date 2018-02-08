@@ -264,5 +264,13 @@ function requestToKey(request: ParsedRequest): string {
     debugName: request.debugName,
     query: queryString,
   };
-  return JSON.stringify(requestKey, Object.keys(requestKey).sort());
+  const deepKeys = obj =>
+    obj && typeof obj === 'object'
+      ? Object.keys(obj).reduce(
+          (total, key) => total.concat(key, deepKeys(obj[key])),
+          [],
+        )
+      : [];
+
+  return JSON.stringify(requestKey, deepKeys(requestKey).sort());
 }
